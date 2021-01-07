@@ -10,5 +10,6 @@ import { Book, BookSchema } from './book.schema';
     ],
     controllers: [BookController],
     providers: [BookService],
+    exports: [BookService],
 })
 export class BookModule {}
