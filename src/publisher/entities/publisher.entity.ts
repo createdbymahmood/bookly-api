@@ -1,1 +1,4 @@
-export class Publisher {}
+export class Publisher {
+    _id: string;
+    title: string;
+}
