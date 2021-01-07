@@ -3,18 +3,18 @@ import { PublisherController } from './publisher.controller';
 import { PublisherService } from './publisher.service';
 
 describe('PublisherController', () => {
-  let controller: PublisherController;
+    let controller: PublisherController;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [PublisherController],
-      providers: [PublisherService],
-    }).compile();
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            controllers: [PublisherController],
+            providers: [PublisherService],
+        }).compile();
 
-    controller = module.get<PublisherController>(PublisherController);
-  });
+        controller = module.get<PublisherController>(PublisherController);
+    });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+    it('should be defined', () => {
+        expect(controller).toBeDefined();
+    });
 });

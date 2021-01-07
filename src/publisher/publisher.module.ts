@@ -3,7 +3,7 @@ import { PublisherService } from './publisher.service';
 import { PublisherController } from './publisher.controller';
 
 @Module({
-  controllers: [PublisherController],
-  providers: [PublisherService]
+    controllers: [PublisherController],
+    providers: [PublisherService],
 })
 export class PublisherModule {}

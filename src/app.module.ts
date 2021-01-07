@@ -10,15 +10,15 @@ import { BookModule } from './book/book.module';
 import { CategoryModule } from './category/category.module';
 
 @Module({
-  controllers: [AppController],
-  providers: [AppService],
-  imports: [
-    UserModule,
-    CommentModule,
-    PublisherModule,
-    BookModule,
-    CategoryModule,
-    MongooseModule.forRoot('mongodb://localhost/bookly'),
-  ],
+    controllers: [AppController],
+    providers: [AppService],
+    imports: [
+        UserModule,
+        CommentModule,
+        PublisherModule,
+        BookModule,
+        CategoryModule,
+        MongooseModule.forRoot('mongodb://localhost/bookly'),
+    ],
 })
 export class AppModule {}
