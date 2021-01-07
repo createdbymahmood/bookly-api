@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsMongoId } from 'class-validator';
-import { IsBookIdValid } from '../validations/IsBookIdValid';
-import { IsAuthorIdValid } from '../validations/IsAuthorIdValid';
+import { IsBookIdValid } from '../../validations/IsBookIdValid';
+import { IsAuthorIdValid } from '../../validations/IsAuthorIdValid';
 
 export class CreateCommentDto {
     @IsNotEmpty()

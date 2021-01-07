@@ -6,28 +6,28 @@ import {
     ValidatorConstraintInterface,
     ValidationArguments,
 } from 'class-validator';
-import { UserService } from '../../user/user.service';
+import { BookService } from '../book/book.service';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
-export class IsAuthorIdValidConstraint implements ValidatorConstraintInterface {
-    constructor(private userService: UserService) {}
+export class IsBookIdValidConstraint implements ValidatorConstraintInterface {
+    constructor(private bookService: BookService) {}
     async validate(id: string, args: ValidationArguments) {
-        return this.userService.findOne(id).then(user => {
-            if (user) return true;
+        return this.bookService.findOne(id).then(book => {
+            if (book) return true;
             return false;
         });
     }
 }
 
-export function IsAuthorIdValid(validationOptions?: ValidationOptions) {
+export function IsBookIdValid(validationOptions?: ValidationOptions) {
     return function (object: Object, propertyName: string) {
         registerDecorator({
             target: object.constructor,
             propertyName: propertyName,
             options: validationOptions,
             constraints: [],
-            validator: IsAuthorIdValidConstraint,
+            validator: IsBookIdValidConstraint,
         });
     };
 }

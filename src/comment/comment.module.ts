@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+/* internals */
 import { CommentService } from './comment.service';
 import { CommentController } from './comment.controller';
 import { Comment, CommentSchema } from './comment.schema';
-import { IsAuthorIdValidConstraint } from './validations/IsAuthorIdValid';
-import { IsBookIdValidConstraint } from './validations/IsBookIdValid';
-import { UserModule } from '../user/user.module';
-import { BookModule } from '../book/book.module';
+/* outside services */
+import { IsAuthorIdValidConstraint } from 'validations/IsAuthorIdValid';
+import { IsBookIdValidConstraint } from 'validations/IsBookIdValid';
+import { UserModule } from 'user/user.module';
+import { BookModule } from 'book/book.module';
 
 @Module({
     imports: [
