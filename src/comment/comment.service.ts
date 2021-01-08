@@ -1,14 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from './comment.schema';
+import { BookService } from 'book/book.service';
 
 @Injectable()
 export class CommentService {
     constructor(
         @InjectModel(Comment.name) private model: Model<CommentDocument>,
+        @Inject(BookService) private bookService: BookService,
     ) {}
 
     get populationOptions() {
@@ -17,8 +19,11 @@ export class CommentService {
             { path: 'author', select: 'name _id' },
         ];
     }
-    create(createCommentDto: CreateCommentDto) {
-        return this.model.create(createCommentDto);
+
+    async create(createCommentDto: CreateCommentDto) {
+        const comment = await this.model.create(createCommentDto);
+        await this.bookService.appendComment(comment.book, comment._id);
+        return comment;
     }
 
     findAll() {

@@ -11,10 +11,17 @@ export class Book {
     @Prop()
     title: string;
 
+    @Prop([
+        {
+            type: Mongoose.Schema.Types.ObjectId,
+            ref: 'Comment',
+        },
+    ])
+    comments: string;
+
     @Prop({
         type: Mongoose.Schema.Types.ObjectId,
         ref: 'Category',
-        autopopulate: true,
     })
     category: string;
 }

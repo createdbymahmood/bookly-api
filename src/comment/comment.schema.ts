@@ -9,7 +9,11 @@ export type CommentDocument = Comment & Document;
     versionKey: false,
 })
 export class Comment {
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+    @Prop({
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        autopopulate: true,
+    })
     author: string;
 
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Book' })

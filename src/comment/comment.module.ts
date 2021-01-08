@@ -11,11 +11,21 @@ import { IsCommentIdValidConstraint } from 'validations/isCommentIdValid';
 
 import { UserModule } from 'user/user.module';
 import { BookModule } from 'book/book.module';
+import { BookService } from 'book/book.service';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([
-            { name: Comment.name, schema: CommentSchema },
+        MongooseModule.forFeatureAsync([
+            {
+                name: Comment.name,
+                useFactory: () => {
+                    const schema = CommentSchema;
+                    schema.pre('find', function () {
+                        this.lean().populate('author', 'name _id');
+                    });
+                    return schema;
+                },
+            },
         ]),
         UserModule,
         BookModule,

@@ -5,12 +5,13 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Book, BookDocument } from './book.schema';
 import { CategoryService } from 'category/category.service';
+import { CommentService } from 'comment/comment.service';
 
 @Injectable()
 export class BookService {
     constructor(
         @InjectModel(Book.name) private model: Model<BookDocument>,
-        @Inject(CategoryService) private categoryService: CategoryService,
+        @Inject(CategoryService) private categoryService: CategoryService, // @Inject(CommentService) private commentService: CommentService,
     ) {}
 
     get populationOptions() {
@@ -18,6 +19,10 @@ export class BookService {
             {
                 path: 'category',
                 select: 'title',
+            },
+            {
+                path: 'comments',
+                select: 'body author',
             },
         ];
     }
@@ -40,16 +45,25 @@ export class BookService {
         return this.model
             .findOne({ _id })
             .lean()
-            .populate('category', '_id title');
+            .populate(this.populationOptions);
     }
 
     update(_id: string, updateBookDto: UpdateBookDto) {
         return this.model.updateOne({ _id }, { $set: updateBookDto });
     }
 
+    appendComment(bookId: string, commentId: string) {
+        return this.model.updateOne(
+            { _id: bookId },
+            /* @ts-ignore */
+            { $push: { comments: commentId } },
+        );
+    }
+
     async remove(_id: string) {
         const book = await this.findOne(_id);
         await this.categoryService.detachBook(book.category, book._id);
+        // await this.commentService.remove()
         return this.model.deleteOne({ _id });
     }
 }
