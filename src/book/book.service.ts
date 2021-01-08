@@ -7,27 +7,25 @@ import { Book, BookDocument } from './book.schema';
 
 @Injectable()
 export class BookService {
-    constructor(
-        @InjectModel(Book.name) private bookModel: Model<BookDocument>,
-    ) {}
+    constructor(@InjectModel(Book.name) private model: Model<BookDocument>) {}
 
     create(createBookDto: CreateBookDto) {
-        return this.bookModel.create(createBookDto);
+        return this.model.create(createBookDto);
     }
 
     findAll() {
-        return this.bookModel.find();
+        return this.model.find();
     }
 
     findOne(_id: string) {
-        return this.bookModel.findOne({ _id });
+        return this.model.findOne({ _id });
     }
 
     update(_id: string, updateBookDto: UpdateBookDto) {
-        return this.bookModel.updateOne({ _id }, { $set: updateBookDto });
+        return this.model.updateOne({ _id }, { $set: updateBookDto });
     }
 
     remove(_id: string) {
-        return this.bookModel.deleteOne({ _id });
+        return this.model.deleteOne({ _id });
     }
 }
