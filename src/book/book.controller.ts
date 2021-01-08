@@ -8,6 +8,7 @@ import {
     Delete,
 } from '@nestjs/common';
 import { BookService } from './book.service';
+import { FindBookParams } from './dto/book.params.dto';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 
@@ -26,17 +27,20 @@ export class BookController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.bookService.findOne(id);
+    findOne(@Param() params: FindBookParams) {
+        return this.bookService.findOne(params.id);
     }
 
     @Put(':id')
-    update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-        return this.bookService.update(id, updateBookDto);
+    update(
+        @Param() params: FindBookParams,
+        @Body() updateBookDto: UpdateBookDto,
+    ) {
+        return this.bookService.update(params.id, updateBookDto);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.bookService.remove(id);
+    remove(@Param() params: FindBookParams) {
+        return this.bookService.remove(params.id);
     }
 }

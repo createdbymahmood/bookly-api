@@ -3,7 +3,10 @@ import { Document } from 'mongoose';
 
 export type PublisherDocument = Publisher & Document;
 
-@Schema()
+@Schema({
+    timestamps: true,
+    versionKey: false,
+})
 export class Publisher {
     @Prop()
     title: string;

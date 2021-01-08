@@ -18,7 +18,12 @@ import { CategoryModule } from './category/category.module';
         PublisherModule,
         BookModule,
         CategoryModule,
-        MongooseModule.forRoot('mongodb://localhost/bookly'),
+        MongooseModule.forRoot('mongodb://localhost/bookly', {
+            connectionFactory: connection => {
+                connection.plugin(require('mongoose-autopopulate'));
+                return connection;
+            },
+        }),
     ],
 })
 export class AppModule {}

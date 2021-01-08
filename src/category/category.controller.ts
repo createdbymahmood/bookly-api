@@ -8,6 +8,7 @@ import {
     Delete,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
+import { FindCategoryParams } from './dto/category.params.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
@@ -26,8 +27,8 @@ export class CategoryController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.categoryService.findOne(+id);
+    findOne(@Param() params: FindCategoryParams) {
+        return this.categoryService.findOne(params.id);
     }
 
     @Put(':id')
