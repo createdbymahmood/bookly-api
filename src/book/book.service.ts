@@ -13,6 +13,14 @@ export class BookService {
         @Inject(CategoryService) private categoryService: CategoryService,
     ) {}
 
+    get populationOptions() {
+        return [
+            {
+                path: 'category',
+                select: 'title',
+            },
+        ];
+    }
     /* 
     todo ~> R&D what is the best way of doing this
     */
@@ -25,7 +33,7 @@ export class BookService {
     }
 
     findAll() {
-        return this.model.find().lean().populate('category', 'title');
+        return this.model.find().lean().populate(this.populationOptions);
     }
 
     findOne(_id: string) {
