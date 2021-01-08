@@ -9,6 +9,9 @@ export type UserDocument = User & Mongoose.Document;
 })
 export class User {
     @Prop()
+    _id: Mongoose.Types.ObjectId;
+
+    @Prop()
     name: string;
 
     @Prop([

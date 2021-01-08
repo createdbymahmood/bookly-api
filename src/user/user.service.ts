@@ -33,6 +33,13 @@ export class UserService {
             .populate(this.populationOptions);
     }
 
+    findOneByName(name: string) {
+        return this.model
+            .findOne({ name })
+            .lean()
+            .populate(this.populationOptions);
+    }
+
     async update(_id: string, updateUserDto: UpdateUserDto) {
         await this.model.updateOne({ _id }, { $set: updateUserDto });
         return this.findOne(_id);

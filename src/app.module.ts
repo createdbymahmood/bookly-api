@@ -8,6 +8,7 @@ import { CommentModule } from './comment/comment.module';
 import { PublisherModule } from './publisher/publisher.module';
 import { BookModule } from './book/book.module';
 import { CategoryModule } from './category/category.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
     controllers: [AppController],
@@ -19,6 +20,7 @@ import { CategoryModule } from './category/category.module';
         BookModule,
         CategoryModule,
         MongooseModule.forRoot('mongodb://localhost/bookly'),
+        AuthModule,
     ],
 })
 export class AppModule {}
