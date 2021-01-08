@@ -11,16 +11,30 @@ export class CommentService {
         @InjectModel(Comment.name) private model: Model<CommentDocument>,
     ) {}
 
+    get populationOptions() {
+        return [
+            { path: 'book', select: 'title _id' },
+            { path: 'author', select: 'name _id' },
+        ];
+    }
     create(createCommentDto: CreateCommentDto) {
         return this.model.create(createCommentDto);
     }
 
     findAll() {
-        return this.model.find().populate(['author', 'book']);
+        return this.model
+            .find()
+            .populate(this.populationOptions)
+            .lean()
+            .select('isPublished _id body');
     }
 
     findOne(_id: string) {
-        return this.model.findOne({ _id });
+        return this.model
+            .findOne({ _id })
+            .populate(this.populationOptions)
+            .lean()
+            .select('isPublished _id body');
     }
 
     update(_id: string, updateCommentDto: UpdateCommentDto) {

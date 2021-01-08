@@ -25,7 +25,10 @@ export function IsUserIdValid(validationOptions?: ValidationOptions) {
         registerDecorator({
             target: object.constructor,
             propertyName: propertyName,
-            options: validationOptions,
+            options: {
+                message: 'UserId not valid',
+                ...validationOptions,
+            },
             constraints: [],
             validator: IsUserIdValidConstraint,
         });
