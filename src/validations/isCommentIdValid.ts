@@ -5,6 +5,7 @@ import {
     ValidatorConstraint,
     ValidatorConstraintInterface,
     ValidationArguments,
+    isMongoId,
 } from 'class-validator';
 import { CommentService } from '../comment/comment.service';
 
@@ -14,6 +15,9 @@ export class IsCommentIdValidConstraint
     implements ValidatorConstraintInterface {
     constructor(private commentService: CommentService) {}
     async validate(id: string, args: ValidationArguments) {
+        if (!isMongoId(id)) {
+            return false;
+        }
         return this.commentService.findOne(id).then(comment => {
             if (comment) return true;
             return false;

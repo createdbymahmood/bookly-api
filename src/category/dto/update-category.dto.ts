@@ -6,5 +6,5 @@ export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {
     title?: string;
 
     @IsBookIdValid()
-    books: string;
+    books: string[];
 }

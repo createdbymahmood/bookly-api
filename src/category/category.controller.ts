@@ -33,14 +33,14 @@ export class CategoryController {
 
     @Put(':id')
     update(
-        @Param('id') id: string,
+        @Param() params: FindCategoryParams,
         @Body() updateCategoryDto: UpdateCategoryDto,
     ) {
-        return this.categoryService.update(id, updateCategoryDto);
+        return this.categoryService.update(params.id, updateCategoryDto);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.categoryService.remove(id);
+    remove(@Param() params: FindCategoryParams) {
+        return this.categoryService.remove(params.id);
     }
 }

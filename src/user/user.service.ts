@@ -21,8 +21,9 @@ export class UserService {
         return this.model.findOne({ _id });
     }
 
-    update(_id: string, updateUserDto: UpdateUserDto) {
-        return this.model.updateOne({ _id }, { $set: updateUserDto });
+    async update(_id: string, updateUserDto: UpdateUserDto) {
+        await this.model.updateOne({ _id }, { $set: updateUserDto });
+        return this.findOne(_id);
     }
 
     remove(_id: string) {

@@ -5,6 +5,7 @@ import {
     ValidatorConstraint,
     ValidatorConstraintInterface,
     ValidationArguments,
+    isMongoId,
 } from 'class-validator';
 import { PublisherService } from '../publisher/publisher.service';
 
@@ -14,6 +15,9 @@ export class IsPublisherIdValidConstraint
     implements ValidatorConstraintInterface {
     constructor(private publisherService: PublisherService) {}
     async validate(id: string, args: ValidationArguments) {
+        if (!isMongoId(id)) {
+            return false;
+        }
         return this.publisherService.findOne(id).then(publisher => {
             if (publisher) return true;
             return false;

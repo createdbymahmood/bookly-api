@@ -11,7 +11,7 @@ import { CommentService } from 'comment/comment.service';
 export class BookService {
     constructor(
         @InjectModel(Book.name) private model: Model<BookDocument>,
-        @Inject(CategoryService) private categoryService: CategoryService, // @Inject(CommentService) private commentService: CommentService,
+        @Inject(CategoryService) private categoryService: CategoryService,
     ) {}
 
     get populationOptions() {
@@ -26,14 +26,14 @@ export class BookService {
             },
         ];
     }
-    /* 
-    todo ~> R&D what is the best way of doing this
-    */
+
     async create(createBookDto: CreateBookDto) {
         const book = await this.model.create(createBookDto);
+        /* @ts-ignore */
         await this.categoryService.appendBook(createBookDto.category, {
             books: book._id,
         });
+
         return book;
     }
 
@@ -48,8 +48,11 @@ export class BookService {
             .populate(this.populationOptions);
     }
 
-    update(_id: string, updateBookDto: UpdateBookDto) {
-        return this.model.updateOne({ _id }, { $set: updateBookDto });
+    async update(_id: string, updateBookDto: UpdateBookDto) {
+        await this.model.updateOne({ _id }, { $set: updateBookDto });
+        const book = await this.findOne(_id);
+        await this.categoryService.appendBook(updateBookDto.category, book._id);
+        return book;
     }
 
     appendComment(bookId: string, commentId: string) {
@@ -60,10 +63,17 @@ export class BookService {
         );
     }
 
+    detachCategory(bookId: string, categoryId: string) {
+        return this.model.updateOne(
+            { _id: bookId },
+            /* @ts-ignore */
+            { $pull: { category: categoryId } },
+        );
+    }
+
     async remove(_id: string) {
         const book = await this.findOne(_id);
         await this.categoryService.detachBook(book.category, book._id);
-        // await this.commentService.remove()
         return this.model.deleteOne({ _id });
     }
 }

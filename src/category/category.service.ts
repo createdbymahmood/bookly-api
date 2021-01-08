@@ -1,14 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import {
+    forwardRef,
+    HttpException,
+    HttpStatus,
+    Inject,
+    Injectable,
+} from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './category.schema';
+import { BookService } from 'book/book.service';
+import { map } from 'lodash/fp';
 
 @Injectable()
 export class CategoryService {
     constructor(
         @InjectModel(Category.name) private model: Model<CategoryDocument>,
+        @Inject(forwardRef(() => BookService))
+        private bookService: BookService,
     ) {}
 
     create(createCategoryDto: CreateCategoryDto) {
@@ -20,22 +30,27 @@ export class CategoryService {
             .find()
             .select(['_id', 'title'])
             .lean()
-            .populate('books', 'title, books');
+            .populate([{ path: 'books', select: 'title' }]);
     }
 
     findOne(_id: string) {
-        return this.model.findOne({ _id }).select(['_id', 'title']);
+        return this.model
+            .findOne({ _id })
+            .select(['_id', 'title'])
+            .lean()
+            .populate([{ path: 'books', select: 'title' }]);
     }
 
-    update(_id: string, updateCategoryDto: UpdateCategoryDto) {
-        return this.model.updateOne({ _id }, { $set: updateCategoryDto });
+    async update(_id: string, updateCategoryDto: UpdateCategoryDto) {
+        await this.model.updateOne({ _id }, { $set: updateCategoryDto });
+        return this.findOne(_id);
     }
 
-    appendBook(_id: string, updateCategoryDto: UpdateCategoryDto) {
+    appendBook(categoryId: string, bookId: string) {
         return this.model.updateOne(
-            { _id },
+            { _id: categoryId },
             /* @ts-ignore */
-            { $push: { books: updateCategoryDto.books } },
+            { $addToSet: { books: bookId } },
         );
     }
     detachBook(categoryId: string, bookId: string) {
@@ -45,7 +60,18 @@ export class CategoryService {
             { $pull: { books: bookId } },
         );
     }
-    remove(_id: string) {
-        return this.model.deleteOne({ _id });
+    async remove(_id: string) {
+        const category = await this.findOne(_id);
+        const categoryBooks = category?.books;
+
+        if (categoryBooks?.length) {
+            throw new HttpException(
+                'This category contains some books! Sorry! We can not delete it.',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+
+        await this.model.deleteOne({ _id });
+        return category;
     }
 }

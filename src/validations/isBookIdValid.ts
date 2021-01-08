@@ -5,6 +5,7 @@ import {
     ValidatorConstraint,
     ValidatorConstraintInterface,
     ValidationArguments,
+    isMongoId,
 } from 'class-validator';
 import { BookService } from '../book/book.service';
 
@@ -13,6 +14,9 @@ import { BookService } from '../book/book.service';
 export class IsBookIdValidConstraint implements ValidatorConstraintInterface {
     constructor(private bookService: BookService) {}
     async validate(id: string, args: ValidationArguments) {
+        if (!isMongoId(id)) {
+            return false;
+        }
         return this.bookService.findOne(id).then(book => {
             if (book) return true;
             return false;

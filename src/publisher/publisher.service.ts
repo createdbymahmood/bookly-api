@@ -23,8 +23,9 @@ export class PublisherService {
         return this.model.findOne({ _id });
     }
 
-    update(_id: string, updatePublisherDto: UpdatePublisherDto) {
-        return this.model.updateOne({ _id }, { $set: updatePublisherDto });
+    async update(_id: string, updatePublisherDto: UpdatePublisherDto) {
+        await this.model.updateOne({ _id }, { $set: updatePublisherDto });
+        return this.findOne(_id);
     }
 
     remove(_id: string) {

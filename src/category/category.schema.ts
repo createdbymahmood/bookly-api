@@ -17,7 +17,7 @@ export class Category {
             ref: 'Book',
         },
     ])
-    books: string;
+    books: string[];
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);

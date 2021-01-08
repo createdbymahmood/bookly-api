@@ -27,20 +27,20 @@ export class UserController {
     }
 
     @Get(':id')
-    findOne(@Param('id') params: FindUserParams) {
+    findOne(@Param() params: FindUserParams) {
         return this.userService.findOne(params.id);
     }
 
     @Put(':id')
     update(
-        @Param('id') params: FindUserParams,
+        @Param() params: FindUserParams,
         @Body() updateUserDto: UpdateUserDto,
     ) {
         return this.userService.update(params.id, updateUserDto);
     }
 
     @Delete(':id')
-    remove(@Param('id') params: FindUserParams) {
+    remove(@Param() params: FindUserParams) {
         return this.userService.remove(params.id);
     }
 }

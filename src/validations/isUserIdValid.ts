@@ -5,6 +5,7 @@ import {
     ValidatorConstraint,
     ValidatorConstraintInterface,
     ValidationArguments,
+    isMongoId,
 } from 'class-validator';
 import { UserService } from '../user/user.service';
 
@@ -13,6 +14,9 @@ import { UserService } from '../user/user.service';
 export class IsUserIdValidConstraint implements ValidatorConstraintInterface {
     constructor(private userService: UserService) {}
     async validate(id: string, args: ValidationArguments) {
+        if (!isMongoId(id)) {
+            return false;
+        }
         return this.userService.findOne(id).then(user => {
             if (user) return true;
             return false;

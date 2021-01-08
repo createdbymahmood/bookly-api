@@ -42,8 +42,9 @@ export class CommentService {
             .select('isPublished _id body');
     }
 
-    update(_id: string, updateCommentDto: UpdateCommentDto) {
-        return this.model.updateOne({ _id }, { $set: updateCommentDto });
+    async update(_id: string, updateCommentDto: UpdateCommentDto) {
+        await this.model.updateOne({ _id }, { $set: updateCommentDto });
+        return this.findOne(_id);
     }
 
     remove(_id: string) {
