@@ -7,6 +7,7 @@ import {
     Param,
     Delete,
 } from '@nestjs/common';
+import { Public } from 'auth/auth-public';
 import { CategoryService } from './category.service';
 import { FindCategoryParams } from './dto/category.params.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -21,11 +22,13 @@ export class CategoryController {
         return this.categoryService.create(createCategoryDto);
     }
 
+    @Public()
     @Get()
     findAll() {
         return this.categoryService.findAll();
     }
 
+    @Public()
     @Get(':id')
     findOne(@Param() params: FindCategoryParams) {
         return this.categoryService.findOne(params.id);

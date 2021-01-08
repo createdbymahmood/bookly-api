@@ -7,6 +7,7 @@ import {
     Param,
     Delete,
 } from '@nestjs/common';
+import { Public } from 'auth/auth-public';
 import { CommentService } from './comment.service';
 import { FindCommentParam } from './dto/comment.params.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -21,6 +22,7 @@ export class CommentController {
         return this.commentService.create(createCommentDto);
     }
 
+    @Public()
     @Get()
     findAll() {
         return this.commentService.findAll();

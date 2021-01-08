@@ -11,6 +11,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindUserParams } from './dto/user.params.dto';
+import { Public } from 'auth/auth-public';
 
 @Controller('user')
 export class UserController {
@@ -19,6 +20,12 @@ export class UserController {
     @Post()
     create(@Body() createUserDto: CreateUserDto) {
         return this.userService.create(createUserDto);
+    }
+
+    @Public()
+    @Get('/profile/:id')
+    profile() {
+        return 'user profile';
     }
 
     @Get()

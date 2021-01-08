@@ -7,6 +7,7 @@ import {
     Param,
     Delete,
 } from '@nestjs/common';
+import { Public } from 'auth/auth-public';
 import { Roles } from 'modules/roles.guard';
 import { BookService } from './book.service';
 import { FindBookParams } from './dto/book.params.dto';
@@ -22,11 +23,13 @@ export class BookController {
         return this.bookService.create(createBookDto);
     }
 
+    @Public()
     @Get()
     findAll() {
         return this.bookService.findAll();
     }
 
+    @Public()
     @Get(':id')
     findOne(@Param() params: FindBookParams) {
         return this.bookService.findOne(params.id);

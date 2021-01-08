@@ -11,6 +11,7 @@ import { PublisherService } from './publisher.service';
 import { CreatePublisherDto } from './dto/create-publisher.dto';
 import { UpdatePublisherDto } from './dto/update-publisher.dto';
 import { FindPublisherParams } from './dto/publisher.params.dto';
+import { Public } from 'auth/auth-public';
 
 @Controller('publisher')
 export class PublisherController {
@@ -21,11 +22,13 @@ export class PublisherController {
         return this.publisherService.create(createPublisherDto);
     }
 
+    @Public()
     @Get()
     findAll() {
         return this.publisherService.findAll();
     }
 
+    @Public()
     @Get(':id')
     findOne(@Param() params: FindPublisherParams) {
         return this.publisherService.findOne(params.id);
