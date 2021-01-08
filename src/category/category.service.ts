@@ -10,15 +10,11 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './category.schema';
-import { BookService } from 'book/book.service';
-import { map } from 'lodash/fp';
 
 @Injectable()
 export class CategoryService {
     constructor(
         @InjectModel(Category.name) private model: Model<CategoryDocument>,
-        @Inject(forwardRef(() => BookService))
-        private bookService: BookService,
     ) {}
 
     create(createCategoryDto: CreateCategoryDto) {

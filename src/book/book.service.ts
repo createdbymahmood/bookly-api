@@ -1,17 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Book, BookDocument } from './book.schema';
+import { Book, BookDocument, BookSchema } from './book.schema';
 import { CategoryService } from 'category/category.service';
 import { CommentService } from 'comment/comment.service';
+import { map } from 'lodash/fp';
 
 @Injectable()
 export class BookService {
     constructor(
         @InjectModel(Book.name) private model: Model<BookDocument>,
         @Inject(CategoryService) private categoryService: CategoryService,
+        @Inject(forwardRef(() => CommentService))
+        private commentService: CommentService,
     ) {}
 
     get populationOptions() {
@@ -30,9 +33,7 @@ export class BookService {
     async create(createBookDto: CreateBookDto) {
         const book = await this.model.create(createBookDto);
         /* @ts-ignore */
-        await this.categoryService.appendBook(createBookDto.category, {
-            books: book._id,
-        });
+        await this.categoryService.appendBook(createBookDto.category, book._id);
 
         return book;
     }
@@ -63,6 +64,14 @@ export class BookService {
         );
     }
 
+    detachComment(bookId: string, commentId: string) {
+        return this.model.updateOne(
+            { _id: bookId },
+            /* @ts-ignore */
+            { $pull: { comments: commentId } },
+        );
+    }
+
     detachCategory(bookId: string, categoryId: string) {
         return this.model.updateOne(
             { _id: bookId },
@@ -74,6 +83,11 @@ export class BookService {
     async remove(_id: string) {
         const book = await this.findOne(_id);
         await this.categoryService.detachBook(book.category, book._id);
+        const bookComments = book?.comments;
+        if (bookComments?.length) {
+            await this.commentService.removeMany(bookComments);
+        }
+
         return this.model.deleteOne({ _id });
     }
 }

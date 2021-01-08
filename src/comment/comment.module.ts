@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 /* internals */
 import { CommentService } from './comment.service';
@@ -26,7 +26,7 @@ import { BookModule } from 'book/book.module';
                 },
             },
         ]),
-        UserModule,
+        forwardRef(() => UserModule),
         BookModule,
     ],
     controllers: [CommentController],

@@ -17,7 +17,7 @@ export class Book {
             ref: 'Comment',
         },
     ])
-    comments: string;
+    comments: string[];
 
     @Prop({
         type: Mongoose.Schema.Types.ObjectId,
