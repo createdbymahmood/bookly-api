@@ -8,6 +8,7 @@ import {
     Delete,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
+import { FindCommentParam } from './dto/comment.params.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
@@ -26,20 +27,20 @@ export class CommentController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.commentService.findOne(id);
+    findOne(@Param() params: FindCommentParam) {
+        return this.commentService.findOne(params.id);
     }
 
     @Put(':id')
     update(
-        @Param('id') id: string,
+        @Param() params: FindCommentParam,
         @Body() updateCommentDto: UpdateCommentDto,
     ) {
-        return this.commentService.update(id, updateCommentDto);
+        return this.commentService.update(params.id, updateCommentDto);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.commentService.remove(id);
+    remove(@Param() params: FindCommentParam) {
+        return this.commentService.remove(params.id);
     }
 }

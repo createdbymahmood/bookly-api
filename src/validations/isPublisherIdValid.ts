@@ -26,7 +26,10 @@ export function IsPublisherIdValid(validationOptions?: ValidationOptions) {
         registerDecorator({
             target: object.constructor,
             propertyName: propertyName,
-            options: validationOptions,
+            options: {
+                message: 'PublisherId not valid',
+                ...validationOptions,
+            },
             constraints: [],
             validator: IsPublisherIdValidConstraint,
         });

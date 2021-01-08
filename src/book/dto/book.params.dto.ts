@@ -1,8 +1,6 @@
 import { IsBookIdValid } from 'validations/isBookIdValid';
 
 export class FindBookParams {
-    @IsBookIdValid({
-        message: 'Book not valid',
-    })
+    @IsBookIdValid()
     id: string;
 }

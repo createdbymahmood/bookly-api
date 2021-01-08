@@ -5,8 +5,10 @@ import { CommentService } from './comment.service';
 import { CommentController } from './comment.controller';
 import { Comment, CommentSchema } from './comment.schema';
 /* outside services */
-import { IsAuthorIdValidConstraint } from 'validations/IsAuthorIdValid';
+import { IsUserIdValidConstraint } from 'validations/isUserIdValid';
 import { IsBookIdValidConstraint } from 'validations/IsBookIdValid';
+import { IsCommentIdValidConstraint } from 'validations/isCommentIdValid';
+
 import { UserModule } from 'user/user.module';
 import { BookModule } from 'book/book.module';
 
@@ -21,8 +23,9 @@ import { BookModule } from 'book/book.module';
     controllers: [CommentController],
     providers: [
         CommentService,
-        IsAuthorIdValidConstraint,
+        IsUserIdValidConstraint,
         IsBookIdValidConstraint,
+        IsCommentIdValidConstraint,
     ],
     exports: [CommentService],
 })

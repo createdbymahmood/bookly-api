@@ -26,7 +26,10 @@ export function IsCommentIdValid(validationOptions?: ValidationOptions) {
         registerDecorator({
             target: object.constructor,
             propertyName: propertyName,
-            options: validationOptions,
+            options: {
+                message: 'CommentId not valid',
+                ...validationOptions,
+            },
             constraints: [],
             validator: IsCommentIdValidConstraint,
         });

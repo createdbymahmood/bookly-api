@@ -25,7 +25,10 @@ export function IsBookIdValid(validationOptions?: ValidationOptions) {
         registerDecorator({
             target: object.constructor,
             propertyName: propertyName,
-            options: validationOptions,
+            options: {
+                message: 'BookId not valid',
+                ...validationOptions,
+            },
             constraints: [],
             validator: IsBookIdValidConstraint,
         });

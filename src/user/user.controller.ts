@@ -10,6 +10,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FindUserParams } from './dto/user.params.dto';
 
 @Controller('user')
 export class UserController {
@@ -26,17 +27,20 @@ export class UserController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.userService.findOne(id);
+    findOne(@Param('id') params: FindUserParams) {
+        return this.userService.findOne(params.id);
     }
 
     @Put(':id')
-    update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-        return this.userService.update(id, updateUserDto);
+    update(
+        @Param('id') params: FindUserParams,
+        @Body() updateUserDto: UpdateUserDto,
+    ) {
+        return this.userService.update(params.id, updateUserDto);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.userService.remove(id);
+    remove(@Param('id') params: FindUserParams) {
+        return this.userService.remove(params.id);
     }
 }

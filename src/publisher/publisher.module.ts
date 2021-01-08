@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PublisherService } from './publisher.service';
 import { PublisherController } from './publisher.controller';
 import { Publisher, PublisherSchema } from './publisher.schema';
+import { IsPublisherIdValidConstraint } from 'validations/isPublisherIdValid';
 
 @Module({
     imports: [
@@ -11,6 +12,6 @@ import { Publisher, PublisherSchema } from './publisher.schema';
         ]),
     ],
     controllers: [PublisherController],
-    providers: [PublisherService],
+    providers: [PublisherService, IsPublisherIdValidConstraint],
 })
 export class PublisherModule {}

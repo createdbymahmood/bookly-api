@@ -26,7 +26,10 @@ export function IsCategoryIdValid(validationOptions?: ValidationOptions) {
         registerDecorator({
             target: object.constructor,
             propertyName: propertyName,
-            options: validationOptions,
+            options: {
+                message: 'CategoryId not valid',
+                ...validationOptions,
+            },
             constraints: [],
             validator: IsCategoryIdValidConstraint,
         });

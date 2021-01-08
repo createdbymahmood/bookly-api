@@ -10,7 +10,7 @@ import { UserService } from '../user/user.service';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
-export class IsAuthorIdValidConstraint implements ValidatorConstraintInterface {
+export class IsUserIdValidConstraint implements ValidatorConstraintInterface {
     constructor(private userService: UserService) {}
     async validate(id: string, args: ValidationArguments) {
         return this.userService.findOne(id).then(user => {
@@ -20,14 +20,14 @@ export class IsAuthorIdValidConstraint implements ValidatorConstraintInterface {
     }
 }
 
-export function IsAuthorIdValid(validationOptions?: ValidationOptions) {
+export function IsUserIdValid(validationOptions?: ValidationOptions) {
     return function (object: Object, propertyName: string) {
         registerDecorator({
             target: object.constructor,
             propertyName: propertyName,
             options: validationOptions,
             constraints: [],
-            validator: IsAuthorIdValidConstraint,
+            validator: IsUserIdValidConstraint,
         });
     };
 }

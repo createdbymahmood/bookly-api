@@ -1,11 +1,11 @@
 import { IsNotEmpty, IsMongoId } from 'class-validator';
 import { IsBookIdValid } from '../../validations/IsBookIdValid';
-import { IsAuthorIdValid } from '../../validations/IsAuthorIdValid';
+import { IsUserIdValid } from 'validations/isUserIdValid';
 
 export class CreateCommentDto {
     @IsNotEmpty()
     @IsMongoId()
-    @IsAuthorIdValid({
+    @IsUserIdValid({
         message: 'Author is not valid',
     })
     author: string;
