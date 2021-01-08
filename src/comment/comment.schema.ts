@@ -12,7 +12,6 @@ export class Comment {
     @Prop({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        autopopulate: true,
     })
     author: string;
 

@@ -11,7 +11,6 @@ import { IsCommentIdValidConstraint } from 'validations/isCommentIdValid';
 
 import { UserModule } from 'user/user.module';
 import { BookModule } from 'book/book.module';
-import { BookService } from 'book/book.service';
 
 @Module({
     imports: [
