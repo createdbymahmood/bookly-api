@@ -11,6 +11,7 @@ import { CategoryModule } from './category/category.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from 'auth/jwt-auth.guard';
+import { ImageModule } from './image/image.module';
 
 @Module({
     controllers: [AppController],
@@ -29,6 +30,7 @@ import { JwtAuthGuard } from 'auth/jwt-auth.guard';
         CategoryModule,
         MongooseModule.forRoot('mongodb://localhost/bookly'),
         AuthModule,
+        ImageModule,
     ],
 })
 export class AppModule {}
