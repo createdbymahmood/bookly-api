@@ -8,7 +8,6 @@ import {
     Delete,
 } from '@nestjs/common';
 import { Public } from 'auth/auth-public';
-import { Roles } from 'modules/roles.guard';
 import { BookService } from './book.service';
 import { FindBookParams } from './dto/book.params.dto';
 import { CreateBookDto } from './dto/create-book.dto';

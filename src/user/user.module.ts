@@ -5,11 +5,13 @@ import { UserController } from './user.controller';
 import { User, UserSchema } from './user.schema';
 import { IsUserIdValidConstraint } from 'validations/isUserIdValid';
 import { CommentModule } from 'comment/comment.module';
+import { AuthModule } from 'auth/auth.module';
 
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
         forwardRef(() => CommentModule),
+        forwardRef(() => AuthModule),
     ],
     controllers: [UserController],
     providers: [UserService, IsUserIdValidConstraint],
