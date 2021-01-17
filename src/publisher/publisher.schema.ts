@@ -8,8 +8,15 @@ export type PublisherDocument = Publisher & Document;
     versionKey: false,
 })
 export class Publisher {
-    @Prop()
+    @Prop({ required: true })
     title: string;
+
+    @Prop({
+        required: true,
+        default:
+            'Default publisher description, If you see this, something must have gone wrong!',
+    })
+    description: string;
 }
 
 export const PublisherSchema = SchemaFactory.createForClass(Publisher);
