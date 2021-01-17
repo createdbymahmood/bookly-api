@@ -6,6 +6,7 @@ import {
     Put,
     Param,
     Delete,
+    Req,
 } from '@nestjs/common';
 import { Public } from 'auth/auth-public';
 import { CommentService } from './comment.service';
@@ -18,8 +19,14 @@ export class CommentController {
     constructor(private readonly commentService: CommentService) {}
 
     @Post()
-    create(@Body() createCommentDto: CreateCommentDto) {
-        return this.commentService.create(createCommentDto);
+    create(
+        @Body() createCommentDto: Omit<CreateCommentDto, 'author'>,
+        @Req() req,
+    ) {
+        return this.commentService.create({
+            ...createCommentDto,
+            author: req.user.id,
+        });
     }
 
     @Public()

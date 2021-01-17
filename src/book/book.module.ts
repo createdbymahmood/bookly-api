@@ -9,7 +9,18 @@ import { CommentModule } from 'comment/comment.module';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{ name: Book.name, schema: BookSchema }]),
+        MongooseModule.forFeatureAsync([
+            {
+                name: Book.name,
+                useFactory: () => {
+                    const schema = BookSchema;
+                    schema.pre('find', function () {
+                        this.lean().populate('submittedBy', 'name _id');
+                    });
+                    return schema;
+                },
+            },
+        ]),
         CategoryModule,
         forwardRef(() => CommentModule),
     ],

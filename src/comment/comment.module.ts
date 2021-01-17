@@ -20,7 +20,9 @@ import { BookModule } from 'book/book.module';
                 useFactory: () => {
                     const schema = CommentSchema;
                     schema.pre('find', function () {
-                        this.lean().populate('author', 'name _id');
+                        this.lean()
+                            .populate('author', 'name _id')
+                            .select('updatedAt createdAt');
                     });
                     return schema;
                 },
