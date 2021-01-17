@@ -5,7 +5,6 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from './comment.schema';
 import { BookService } from 'book/book.service';
-import * as Mongoose from 'mongoose';
 import { UserService } from 'user/user.service';
 
 @Injectable()

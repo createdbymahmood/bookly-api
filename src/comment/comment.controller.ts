@@ -9,6 +9,7 @@ import {
     Req,
 } from '@nestjs/common';
 import { Public } from 'auth/auth-public';
+import { merge } from 'lodash/fp';
 import { CommentService } from './comment.service';
 import { FindCommentParam } from './dto/comment.params.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -23,10 +24,11 @@ export class CommentController {
         @Body() createCommentDto: Omit<CreateCommentDto, 'author'>,
         @Req() req,
     ) {
-        return this.commentService.create({
-            ...createCommentDto,
-            author: req.user.id,
-        });
+        return this.commentService.create(
+            merge({
+                author: req.user.id,
+            })(createCommentDto),
+        );
     }
 
     @Public()
