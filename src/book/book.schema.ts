@@ -8,8 +8,13 @@ export type BookDocument = Book & Mongoose.Document;
     timestamps: true,
 })
 export class Book {
-    @Prop()
+    @Prop({ required: true })
     title: string;
+
+    @Prop({
+        default: false,
+    })
+    isPublished: boolean;
 
     @Prop([
         {
@@ -24,6 +29,13 @@ export class Book {
         ref: 'Category',
     })
     category: string;
+
+    @Prop({
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    })
+    submittedBy: string;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);

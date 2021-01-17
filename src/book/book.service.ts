@@ -3,10 +3,9 @@ import { Model } from 'mongoose';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Book, BookDocument, BookSchema } from './book.schema';
+import { Book, BookDocument } from './book.schema';
 import { CategoryService } from 'category/category.service';
 import { CommentService } from 'comment/comment.service';
-import { map } from 'lodash/fp';
 
 @Injectable()
 export class BookService {
@@ -26,6 +25,10 @@ export class BookService {
             {
                 path: 'comments',
                 select: 'body author',
+            },
+            {
+                path: 'submittedBy',
+                select: 'name id',
             },
         ];
     }

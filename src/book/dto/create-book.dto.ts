@@ -10,5 +10,5 @@ export class CreateBookDto {
     category: string;
 
     @IsUserIdValid()
-    author: string;
+    submittedBy: string;
 }

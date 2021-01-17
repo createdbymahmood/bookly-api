@@ -6,6 +6,7 @@ import {
     Put,
     Param,
     Delete,
+    Req,
 } from '@nestjs/common';
 import { Public } from 'auth/auth-public';
 import { BookService } from './book.service';
@@ -18,8 +19,14 @@ export class BookController {
     constructor(private readonly bookService: BookService) {}
 
     @Post()
-    create(@Body() createBookDto: CreateBookDto) {
-        return this.bookService.create(createBookDto);
+    create(
+        @Body() createBookDto: Pick<CreateBookDto, 'title' | 'category'>,
+        @Req() req,
+    ) {
+        return this.bookService.create({
+            ...createBookDto,
+            submittedBy: req.user.id,
+        });
     }
 
     @Public()
