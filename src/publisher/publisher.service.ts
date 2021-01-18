@@ -31,7 +31,7 @@ export class PublisherService {
     }
 
     findOne(_id: string) {
-        return this.model.findOne({ _id }).populate('image');
+        return this.model.findOne({ _id }).populate('image followers');
     }
 
     async update(_id: string, updatePublisherDto: UpdatePublisherDto) {
@@ -75,10 +75,11 @@ export class PublisherService {
     }
 
     public async remove(_id: string, unfollowDto: FollowPublisherDto) {
-        await this.userService.unfollowPublisher(unfollowDto.userId, {
-            publisher: _id,
-        });
-
+        /* FIXME this part is not working, checkout why ? 
+        more details: when we delete a publisher, the publisherId must be deAttached 
+        from the users following object
+        */
+        await this.userService.detachPublisher(unfollowDto.userId, _id);
         return this.model.deleteOne({ _id });
     }
 }

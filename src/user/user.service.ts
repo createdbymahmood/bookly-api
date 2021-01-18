@@ -17,7 +17,7 @@ export class UserService {
     get populationOptions() {
         return [
             { path: 'comments', select: 'body book' },
-            { path: 'following' },
+            { path: 'following', select: 'title image' },
         ];
     }
 
@@ -68,6 +68,18 @@ export class UserService {
             { $pull: { following: unfollowDto.publisher } },
         );
         return this.findOne(_id);
+    }
+
+    public async detachPublisher(userId: string, publisherId: string) {
+        const users = await this.findAll();
+
+        await this.model.updateMany(
+            { _id: { $in: users.map(user => user._id) } },
+            { $pull: { following: publisherId } },
+            { multi: true },
+        );
+
+        return this.findOne(userId);
     }
 
     appendComment(userId: string, commentId: string) {
