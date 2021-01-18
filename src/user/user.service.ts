@@ -97,6 +97,7 @@ export class UserService {
     }
 
     async remove(_id: string) {
+        /* FIXME detach userID from publisher followers */
         const user = await this.findOne(_id);
         await this.commentService.removeMany(user.comments);
         await this.model.deleteOne({ _id });
