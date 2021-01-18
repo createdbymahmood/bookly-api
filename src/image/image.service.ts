@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateImageDto } from './dto/create-image.dto';
-import { UpdateImageDto } from './dto/update-image.dto';
 import { Image, ImageDocument } from './image.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -13,19 +12,25 @@ export class ImageService {
         return this.model.create(createImageDto);
     }
 
-    findAll() {
+    public findAll() {
         return this.model.find();
     }
 
-    findOne(_id: string) {
+    public findOne(_id: string) {
         return this.model.findOne({ _id });
     }
 
-    update(_id: number, updateImageDto: UpdateImageDto) {
-        return `This action updates a #${_id} image`;
+    public async remove(_id: string) {
+        const image = await this.findOne(_id);
+        await this.model.deleteOne({ _id });
+        return image;
     }
 
-    remove(_id: number) {
-        return `This action removes a #${_id} image`;
+    public async removeMany(imageIds: string[]) {
+        return this.model.deleteMany({
+            _id: {
+                $in: imageIds,
+            },
+        });
     }
 }
