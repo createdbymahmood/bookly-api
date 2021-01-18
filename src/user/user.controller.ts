@@ -46,6 +46,7 @@ export class UserController {
         return req.user;
     }
 
+    @Public()
     @Get()
     findAll() {
         return this.userService.findAll().populate('image');

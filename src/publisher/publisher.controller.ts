@@ -73,7 +73,7 @@ export class PublisherController {
     }
 
     @Delete(':id')
-    remove(@Param() params: FindPublisherParams) {
-        return this.publisherService.remove(params.id);
+    remove(@Param() params: FindPublisherParams, @Req() req) {
+        return this.publisherService.remove(params.id, req.user.id);
     }
 }

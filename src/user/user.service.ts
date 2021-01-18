@@ -1,7 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto, FollowPublisherDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.schema';
 import { CommentService } from 'comment/comment.service';
@@ -15,7 +15,10 @@ export class UserService {
     ) {}
 
     get populationOptions() {
-        return [{ path: 'comments', select: 'body book' }];
+        return [
+            { path: 'comments', select: 'body book' },
+            { path: 'following' },
+        ];
     }
 
     create(createUserDto: CreateUserDto) {
@@ -40,8 +43,30 @@ export class UserService {
             .populate(this.populationOptions);
     }
 
-    async update(_id: string, updateUserDto: UpdateUserDto) {
+    public async update(_id: string, updateUserDto: UpdateUserDto) {
         await this.model.updateOne({ _id }, { $set: updateUserDto });
+        return this.findOne(_id);
+    }
+
+    public async followPublisher(
+        _id: string,
+        followPublisherDto: FollowPublisherDto,
+    ) {
+        await this.model.updateOne(
+            { _id },
+            { $addToSet: { following: followPublisherDto.publisher } },
+        );
+        return this.findOne(_id);
+    }
+
+    public async unfollowPublisher(
+        _id: string,
+        unfollowDto: FollowPublisherDto,
+    ) {
+        await this.model.updateOne(
+            { _id },
+            { $pull: { following: unfollowDto.publisher } },
+        );
         return this.findOne(_id);
     }
 

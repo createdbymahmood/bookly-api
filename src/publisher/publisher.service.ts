@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreatePublisherDto } from './dto/create-publisher.dto';
 import {
@@ -8,11 +8,13 @@ import {
 } from './dto/update-publisher.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Publisher, PublisherDocument } from './publisher.schema';
+import { UserService } from 'user/user.service';
 
 @Injectable()
 export class PublisherService {
     constructor(
         @InjectModel(Publisher.name) private model: Model<PublisherDocument>,
+        @Inject(UserService) private userService: UserService,
     ) {}
 
     create(createPublisherDto: CreatePublisherDto) {
@@ -20,7 +22,12 @@ export class PublisherService {
     }
 
     findAll() {
-        return this.model.find().populate('image followers');
+        return this.model
+            .find()
+            .populate([
+                { path: 'image' },
+                { path: 'followers', select: 'name _id' },
+            ]);
     }
 
     findOne(_id: string) {
@@ -33,6 +40,10 @@ export class PublisherService {
     }
 
     async follow(_id: string, followDto: FollowPublisherDto) {
+        await this.userService.followPublisher(followDto.userId, {
+            publisher: _id,
+        });
+
         await this.model.updateOne(
             { _id },
             { $addToSet: { followers: followDto.userId } },
@@ -41,6 +52,10 @@ export class PublisherService {
     }
 
     async unfollow(_id: string, unfollowDto: FollowPublisherDto) {
+        await this.userService.unfollowPublisher(unfollowDto.userId, {
+            publisher: _id,
+        });
+
         await this.model.updateOne(
             { _id },
             { $pull: { followers: unfollowDto.userId } },
@@ -58,7 +73,12 @@ export class PublisherService {
         );
         return this.findOne(_id);
     }
-    remove(_id: string) {
+
+    public async remove(_id: string, unfollowDto: FollowPublisherDto) {
+        await this.userService.unfollowPublisher(unfollowDto.userId, {
+            publisher: _id,
+        });
+
         return this.model.deleteOne({ _id });
     }
 }

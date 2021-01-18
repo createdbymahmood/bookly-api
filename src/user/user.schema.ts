@@ -26,6 +26,14 @@ export class User {
         },
     ])
     image: string;
+
+    @Prop([
+        {
+            type: Mongoose.Schema.Types.ObjectId,
+            ref: 'Publisher',
+        },
+    ])
+    following: string[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
