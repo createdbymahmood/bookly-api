@@ -36,6 +36,13 @@ export class Book {
         required: true,
     })
     submittedBy: string;
+
+    @Prop({
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: 'Image',
+        required: false,
+    })
+    image: string;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);

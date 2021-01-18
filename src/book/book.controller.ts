@@ -13,7 +13,7 @@ import { merge } from 'lodash/fp';
 import { BookService } from './book.service';
 import { FindBookParams } from './dto/book.params.dto';
 import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
+import { AppendImageToBookDto, UpdateBookDto } from './dto/update-book.dto';
 
 @Controller('book')
 export class BookController {
@@ -44,6 +44,14 @@ export class BookController {
         @Body() updateBookDto: UpdateBookDto,
     ) {
         return this.bookService.update(params.id, updateBookDto);
+    }
+
+    @Put('attach-image/:id')
+    appendImageToBook(
+        @Param() params: FindBookParams,
+        @Body() updateBookDto: AppendImageToBookDto,
+    ) {
+        return this.bookService.appendImageToBook(params.id, updateBookDto);
     }
 
     @Delete(':id')

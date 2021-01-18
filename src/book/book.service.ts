@@ -1,7 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
+import { AppendImageToBookDto, UpdateBookDto } from './dto/update-book.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Book, BookDocument } from './book.schema';
 import { CategoryService } from 'category/category.service';
@@ -30,6 +30,9 @@ export class BookService {
                 path: 'submittedBy',
                 select: 'name id',
             },
+            {
+                path: 'image',
+            },
         ];
     }
 
@@ -53,6 +56,13 @@ export class BookService {
     }
 
     async update(_id: string, updateBookDto: UpdateBookDto) {
+        await this.model.updateOne({ _id }, { $set: updateBookDto });
+        const book = await this.findOne(_id);
+        await this.categoryService.appendBook(updateBookDto.category, book._id);
+        return book;
+    }
+
+    async appendImageToBook(_id: string, updateBookDto: AppendImageToBookDto) {
         await this.model.updateOne({ _id }, { $set: updateBookDto });
         const book = await this.findOne(_id);
         await this.categoryService.appendBook(updateBookDto.category, book._id);
