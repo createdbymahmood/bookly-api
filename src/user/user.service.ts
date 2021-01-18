@@ -1,7 +1,11 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto, FollowPublisherDto } from './dto/update-user.dto';
+import {
+    UpdateUserDto,
+    FollowPublisherDto,
+    ChangeRoleDto,
+} from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.schema';
 import { CommentService } from 'comment/comment.service';
@@ -45,6 +49,14 @@ export class UserService {
 
     public async update(_id: string, updateUserDto: UpdateUserDto) {
         await this.model.updateOne({ _id }, { $set: updateUserDto });
+        return this.findOne(_id);
+    }
+
+    public async changeRole(_id: string, changeRole: ChangeRoleDto) {
+        await this.model.updateOne(
+            { _id },
+            { $set: { role: changeRole.role } },
+        );
         return this.findOne(_id);
     }
 

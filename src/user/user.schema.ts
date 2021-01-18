@@ -3,6 +3,10 @@ import * as Mongoose from 'mongoose';
 
 export type UserDocument = User & Mongoose.Document;
 
+export enum Role {
+    ADMIN,
+    USER,
+}
 @Schema({
     timestamps: true,
     versionKey: false,
@@ -10,6 +14,9 @@ export type UserDocument = User & Mongoose.Document;
 export class User {
     @Prop()
     name: string;
+
+    @Prop({ enum: ['ADMIN', 'USER'], default: 'USER' })
+    role: string;
 
     @Prop([
         {

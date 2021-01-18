@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { ChangeRoleDto, UpdateUserDto } from './dto/update-user.dto';
 import { FindUserParams } from './dto/user.params.dto';
 import { Public } from 'auth/auth-public';
 import { JwtAuthGuard } from 'auth/jwt-auth.guard';
@@ -63,6 +63,14 @@ export class UserController {
         @Body() updateUserDto: UpdateUserDto,
     ) {
         return this.userService.update(params.id, updateUserDto);
+    }
+
+    @Put('/change-role/:id')
+    changeRole(
+        @Param() params: FindUserParams,
+        @Body() changeRoleDto: ChangeRoleDto,
+    ) {
+        return this.userService.changeRole(params.id, changeRoleDto);
     }
 
     @Delete(':id')
