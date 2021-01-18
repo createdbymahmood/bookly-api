@@ -65,7 +65,6 @@ export class BookService {
     async appendImageToBook(_id: string, updateBookDto: AppendImageToBookDto) {
         await this.model.updateOne({ _id }, { $set: updateBookDto });
         const book = await this.findOne(_id);
-        await this.categoryService.appendBook(updateBookDto.category, book._id);
         return book;
     }
 
