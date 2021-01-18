@@ -9,9 +9,6 @@ export type UserDocument = User & Mongoose.Document;
 })
 export class User {
     @Prop()
-    _id: Mongoose.Types.ObjectId;
-
-    @Prop()
     name: string;
 
     @Prop([
@@ -21,6 +18,14 @@ export class User {
         },
     ])
     comments: string[];
+
+    @Prop([
+        {
+            type: Mongoose.Schema.Types.ObjectId,
+            ref: 'Image',
+        },
+    ])
+    image: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

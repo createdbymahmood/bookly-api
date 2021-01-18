@@ -27,6 +27,7 @@ export class UserController {
         private authService: AuthService,
     ) {}
 
+    @Public()
     @Post()
     create(@Body() createUserDto: CreateUserDto) {
         return this.userService.create(createUserDto);
@@ -47,12 +48,12 @@ export class UserController {
 
     @Get()
     findAll() {
-        return this.userService.findAll();
+        return this.userService.findAll().populate('image');
     }
 
     @Get(':id')
     findOne(@Param() params: FindUserParams) {
-        return this.userService.findOne(params.id);
+        return this.userService.findOne(params.id).populate('image');
     }
 
     @Put(':id')
