@@ -4,7 +4,6 @@ import { PublisherService } from './publisher.service';
 import { PublisherController } from './publisher.controller';
 import { Publisher, PublisherSchema } from './publisher.schema';
 import { IsPublisherIdValidConstraint } from 'validations/isPublisherIdValid';
-import { IsImageIdValidConstraint } from 'validations/isImageIdValid';
 
 @Module({
     imports: [

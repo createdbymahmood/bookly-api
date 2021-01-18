@@ -24,6 +24,15 @@ export class Publisher {
         required: false,
     })
     image: string;
+
+    @Prop([
+        {
+            type: Mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: false,
+        },
+    ])
+    followers: string[];
 }
 
 export const PublisherSchema = SchemaFactory.createForClass(Publisher);

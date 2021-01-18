@@ -3,6 +3,7 @@ import { Model } from 'mongoose';
 import { CreatePublisherDto } from './dto/create-publisher.dto';
 import {
     AttachImageToPublisherDto,
+    FollowPublisherDto,
     UpdatePublisherDto,
 } from './dto/update-publisher.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -19,7 +20,7 @@ export class PublisherService {
     }
 
     findAll() {
-        return this.model.find().populate('image');
+        return this.model.find().populate('image followers');
     }
 
     findOne(_id: string) {
@@ -30,6 +31,23 @@ export class PublisherService {
         await this.model.updateOne({ _id }, { $set: updatePublisherDto });
         return this.findOne(_id);
     }
+
+    async follow(_id: string, followDto: FollowPublisherDto) {
+        await this.model.updateOne(
+            { _id },
+            { $addToSet: { followers: followDto.userId } },
+        );
+        return this.findOne(_id);
+    }
+
+    async unfollow(_id: string, unfollowDto: FollowPublisherDto) {
+        await this.model.updateOne(
+            { _id },
+            { $pull: { followers: unfollowDto.userId } },
+        );
+        return this.findOne(_id);
+    }
+
     public async attachImageToPublisher(
         _id: string,
         attachImageToPublisher: AttachImageToPublisherDto,
