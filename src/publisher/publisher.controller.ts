@@ -9,7 +9,10 @@ import {
 } from '@nestjs/common';
 import { PublisherService } from './publisher.service';
 import { CreatePublisherDto } from './dto/create-publisher.dto';
-import { UpdatePublisherDto } from './dto/update-publisher.dto';
+import {
+    AttachImageToPublisherDto,
+    UpdatePublisherDto,
+} from './dto/update-publisher.dto';
 import { FindPublisherParams } from './dto/publisher.params.dto';
 import { Public } from 'auth/auth-public';
 
@@ -41,7 +44,16 @@ export class PublisherController {
     ) {
         return this.publisherService.update(params.id, updatePublisherDto);
     }
-
+    @Put('attach-image/:id')
+    attachImage(
+        @Param() params: FindPublisherParams,
+        @Body() attachImageToPublisherBody: AttachImageToPublisherDto,
+    ) {
+        return this.publisherService.attachImageToPublisher(
+            params.id,
+            attachImageToPublisherBody,
+        );
+    }
     @Delete(':id')
     remove(@Param() params: FindPublisherParams) {
         return this.publisherService.remove(params.id);
