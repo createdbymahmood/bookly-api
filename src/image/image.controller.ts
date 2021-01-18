@@ -12,44 +12,33 @@ import {
 import { ImageService } from './image.service';
 import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
-import {
-    AnyFilesInterceptor,
-    FileInterceptor,
-    MulterModule,
-} from '@nestjs/platform-express';
-import { extname } from 'path';
-
-function generateFilename(file) {
-    return `${Date.now()}.${extname(file.originalname)}`;
-}
+import { AnyFilesInterceptor } from '@nestjs/platform-express';
+import { Public } from 'auth/auth-public';
+import { FindImageParams } from './dto/image.params.dto';
 
 @Controller('image')
 export class ImageController {
     constructor(private readonly imageService: ImageService) {}
 
     @Post('upload')
-    @UseInterceptors(
-        AnyFilesInterceptor({
-            dest: './uploads',
-            storage: {
-                filename: (req, file, callback) => {
-                    callback(null, generateFilename(file));
-                },
-            },
-        }),
-    )
-    uploadFile(@UploadedFiles() files) {
+    @UseInterceptors(AnyFilesInterceptor())
+    public async uploadFile(@UploadedFiles() files: Express.Multer.File[]) {
+        files.map(async file => {
+            await this.imageService.create(file);
+        });
         return files;
     }
 
+    @Public()
     @Get()
     findAll() {
         return this.imageService.findAll();
     }
 
+    @Public()
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.imageService.findOne(+id);
+    findOne(@Param() params: FindImageParams) {
+        return this.imageService.findOne(params.id);
     }
 
     @Put(':id')

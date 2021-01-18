@@ -3,12 +3,18 @@ import {
     MulterModuleOptions,
     MulterOptionsFactory,
 } from '@nestjs/platform-express';
-
+import { diskStorage } from 'multer';
+import { v4 } from 'uuid';
 @Injectable()
-class MulterConfigService implements MulterOptionsFactory {
+export class MulterConfigService implements MulterOptionsFactory {
     createMulterOptions(): MulterModuleOptions {
         return {
-            dest: './upload',
+            storage: diskStorage({
+                destination: './uploads',
+                filename: (req, file, cb) => {
+                    return cb(null, `${v4()}.${file.originalname}`);
+                },
+            }),
         };
     }
 }

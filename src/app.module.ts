@@ -12,6 +12,8 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from 'auth/jwt-auth.guard';
 import { ImageModule } from './image/image.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
     controllers: [AppController],
@@ -31,6 +33,10 @@ import { ImageModule } from './image/image.module';
         MongooseModule.forRoot('mongodb://localhost/bookly'),
         AuthModule,
         ImageModule,
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', 'uploads'),
+            renderPath: 'image',
+        }),
     ],
 })
 export class AppModule {}
