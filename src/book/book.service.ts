@@ -6,12 +6,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Book, BookDocument } from './book.schema';
 import { CategoryService } from 'category/category.service';
 import { CommentService } from 'comment/comment.service';
+import { UserService } from 'user/user.service';
 
 @Injectable()
 export class BookService {
     constructor(
         @InjectModel(Book.name) private model: Model<BookDocument>,
         @Inject(CategoryService) private categoryService: CategoryService,
+        @Inject(forwardRef(() => UserService))
+        private userService: UserService,
         @Inject(forwardRef(() => CommentService))
         private commentService: CommentService,
     ) {}
@@ -31,6 +34,10 @@ export class BookService {
                 select: 'name id',
             },
             {
+                path: 'author',
+                select: 'name id',
+            },
+            {
                 path: 'image',
             },
         ];
@@ -40,7 +47,10 @@ export class BookService {
         const book = await this.model.create(createBookDto);
         /* @ts-ignore */
         await this.categoryService.appendBook(createBookDto.category, book._id);
-
+        await this.userService.attachBookToAuthor(
+            createBookDto.author,
+            book._id,
+        );
         return book;
     }
 
@@ -95,11 +105,11 @@ export class BookService {
     async remove(_id: string) {
         const book = await this.findOne(_id);
         await this.categoryService.detachBook(book.category, book._id);
+        await this.userService.detachBookFromAuthor(_id);
         const bookComments = book?.comments;
         if (bookComments?.length) {
             await this.commentService.removeMany(bookComments);
         }
-
         return this.model.deleteOne({ _id });
     }
 }

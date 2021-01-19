@@ -6,6 +6,7 @@ export type UserDocument = User & Mongoose.Document;
 export enum Role {
     ADMIN,
     USER,
+    AUTHOR,
 }
 @Schema({
     timestamps: true,
@@ -15,7 +16,7 @@ export class User {
     @Prop()
     name: string;
 
-    @Prop({ enum: ['ADMIN', 'USER'], default: 'USER' })
+    @Prop({ enum: ['ADMIN', 'AUTHOR', 'USER'], default: 'USER' })
     role: string;
 
     @Prop([
@@ -41,6 +42,14 @@ export class User {
         },
     ])
     following: string[];
+
+    @Prop([
+        {
+            type: Mongoose.Schema.Types.ObjectId,
+            ref: 'Book',
+        },
+    ])
+    books: string[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

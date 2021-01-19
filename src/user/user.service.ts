@@ -9,6 +9,8 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.schema';
 import { CommentService } from 'comment/comment.service';
+import { BookService } from 'book/book.service';
+import { map } from 'lodash/fp';
 
 @Injectable()
 export class UserService {
@@ -16,12 +18,15 @@ export class UserService {
         @InjectModel(User.name) private model: Model<UserDocument>,
         @Inject(forwardRef(() => CommentService))
         private commentService: CommentService,
+        @Inject(forwardRef(() => BookService))
+        private bookService: BookService,
     ) {}
 
     get populationOptions() {
         return [
             { path: 'comments', select: 'body book' },
             { path: 'following', select: 'title image' },
+            { path: 'books', select: 'title _id' },
         ];
     }
 
@@ -47,6 +52,12 @@ export class UserService {
             .populate(this.populationOptions);
     }
 
+    findAuthors() {
+        return this.model
+            .find({ role: 'AUTHOR' })
+            .lean()
+            .populate(this.populationOptions);
+    }
     public async update(_id: string, updateUserDto: UpdateUserDto) {
         await this.model.updateOne({ _id }, { $set: updateUserDto });
         return this.findOne(_id);
@@ -108,10 +119,33 @@ export class UserService {
         );
     }
 
+    public attachBookToAuthor(userId: string, bookId: string) {
+        return this.model.updateOne(
+            { _id: userId },
+            { $addToSet: { books: bookId } },
+        );
+    }
+
+    public async detachBookFromAuthor(bookId: string) {
+        const users = await this.findAll();
+        await this.model.updateMany(
+            { _id: { $in: users.map(user => user._id) } },
+            { $pull: { books: bookId } },
+            { multi: true },
+        );
+    }
+
     async remove(_id: string) {
         /* FIXME detach userID from publisher followers */
         const user = await this.findOne(_id);
+
+        /* remove all comments related to this user */
         await this.commentService.removeMany(user.comments);
+
+        /* remove all books related to this user */
+        map(async (bookId: string) => await this.bookService.remove(bookId))(
+            user.books,
+        );
         await this.model.deleteOne({ _id });
         return user;
     }

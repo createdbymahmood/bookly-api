@@ -8,8 +8,6 @@ import {
     Delete,
     Request,
     UseGuards,
-    forwardRef,
-    Inject,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -41,7 +39,6 @@ export class UserController {
     }
 
     @Get('profile')
-    @UseGuards(JwtAuthGuard)
     profile(@Request() req) {
         return req.user;
     }
@@ -52,6 +49,13 @@ export class UserController {
         return this.userService.findAll().populate('image');
     }
 
+    @Public()
+    @Get('/authors')
+    findAuthors() {
+        return this.userService.findAuthors().populate('image');
+    }
+
+    @Public()
     @Get(':id')
     findOne(@Param() params: FindUserParams) {
         return this.userService.findOne(params.id).populate('image');

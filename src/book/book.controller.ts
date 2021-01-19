@@ -7,6 +7,7 @@ import {
     Param,
     Delete,
     Req,
+    Request,
 } from '@nestjs/common';
 import { Public } from 'auth/auth-public';
 import { merge } from 'lodash/fp';
@@ -20,15 +21,20 @@ export class BookController {
     constructor(private readonly bookService: BookService) {}
 
     @Post()
-    create(@Body() createBookDto: Omit<CreateBookDto, 'author'>, @Req() req) {
+    create(
+        @Body() createBookDto: Omit<CreateBookDto, 'author'>,
+        @Request() req,
+    ) {
         return this.bookService.create(
-            merge({ submittedBy: req.user.id })(createBookDto),
+            Object.assign(createBookDto, {
+                submittedBy: req.user.id,
+            }) as CreateBookDto,
         );
     }
 
     @Public()
     @Get()
-    findAll() {
+    findAll(@Request() req) {
         return this.bookService.findAll();
     }
 

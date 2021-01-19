@@ -9,6 +9,9 @@ export class CreateBookDto {
     @IsCategoryIdValid()
     category: string;
 
-    @IsUserIdValid()
+    @IsUserIdValid({ message: 'Submitted by who?' })
     submittedBy: string;
+
+    @IsUserIdValid()
+    author: string;
 }
