@@ -21,7 +21,7 @@ import { BookModule } from 'book/book.module';
                     const schema = CommentSchema;
                     schema.pre('find', function () {
                         this.lean()
-                            .populate('author', 'name _id')
+                            .populate('author', 'name _id role')
                             .select('updatedAt createdAt');
                     });
                     return schema;

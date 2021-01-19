@@ -19,7 +19,7 @@ export class CommentService {
     get populationOptions() {
         return [
             { path: 'book', select: 'title _id' },
-            { path: 'author', select: 'name _id' },
+            { path: 'author', select: 'name _id role' },
         ];
     }
 
@@ -34,19 +34,14 @@ export class CommentService {
     }
 
     findAll() {
-        return this.model
-            .find()
-            .populate(this.populationOptions)
-            .lean()
-            .select('isPublished _id body');
+        return this.model.find().lean().populate(this.populationOptions);
     }
 
     findOne(_id: string) {
         return this.model
             .findOne({ _id })
-            .populate(this.populationOptions)
             .lean()
-            .select('isPublished _id body');
+            .populate(this.populationOptions);
     }
 
     async update(_id: string, updateCommentDto: UpdateCommentDto) {

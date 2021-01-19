@@ -57,6 +57,9 @@ export class Book {
         required: false,
     })
     publisher: string;
+
+    @Prop({ type: String })
+    description: string;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);

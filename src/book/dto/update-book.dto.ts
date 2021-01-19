@@ -14,6 +14,9 @@ export class UpdateBookDto extends PartialType(CreateBookDto) {
     title: string;
 
     @IsOptional()
+    description: string;
+
+    @IsOptional()
     @IsBoolean()
     isPublished: boolean;
 
