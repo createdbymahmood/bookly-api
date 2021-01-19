@@ -10,7 +10,9 @@ import {
     Request,
 } from '@nestjs/common';
 import { Public } from 'auth/auth-public';
+import { omit } from 'lodash';
 import { merge } from 'lodash/fp';
+import { User } from 'user/user.schema';
 import { BookService } from './book.service';
 import { FindBookParams } from './dto/book.params.dto';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -21,15 +23,14 @@ export class BookController {
     constructor(private readonly bookService: BookService) {}
 
     @Post()
-    create(
-        @Body() createBookDto: Omit<CreateBookDto, 'author'>,
-        @Request() req,
-    ) {
+    public create(@Body() createBookDto: CreateBookDto, @Request() req) {
         return this.bookService.create(
-            Object.assign(createBookDto, {
-                submittedBy: req.user.id,
-            }) as CreateBookDto,
+            merge(createBookDto, { submittedBy: req?.user?.id }),
         );
+        /*  return this.bookService.create({
+            ...createBookDto,
+            submittedBy: req?.user?.id,
+        }); */
     }
 
     @Public()

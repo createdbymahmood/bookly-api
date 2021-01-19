@@ -50,6 +50,13 @@ export class Book {
         required: false,
     })
     author: string;
+
+    @Prop({
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: 'Publisher',
+        required: false,
+    })
+    publisher: string;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);

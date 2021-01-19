@@ -25,9 +25,9 @@ export class CommentController {
         @Req() req,
     ) {
         return this.commentService.create(
-            merge({
+            Object.assign(createCommentDto, {
                 author: req.user.id,
-            })(createCommentDto),
+            }),
         );
     }
 

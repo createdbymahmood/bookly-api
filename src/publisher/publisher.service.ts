@@ -1,7 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreatePublisherDto } from './dto/create-publisher.dto';
 import {
+    AttachBookToPublisherDto,
     AttachImageToPublisherDto,
     FollowPublisherDto,
     UpdatePublisherDto,
@@ -9,12 +10,17 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Publisher, PublisherDocument } from './publisher.schema';
 import { UserService } from 'user/user.service';
+import { BookService } from 'book/book.service';
 
 @Injectable()
 export class PublisherService {
     constructor(
         @InjectModel(Publisher.name) private model: Model<PublisherDocument>,
-        @Inject(UserService) private userService: UserService,
+
+        @Inject(forwardRef(() => UserService)) private userService: UserService,
+
+        @Inject(forwardRef(() => BookService))
+        private bookService: BookService,
     ) {}
 
     create(createPublisherDto: CreatePublisherDto) {
@@ -24,9 +30,11 @@ export class PublisherService {
     findAll() {
         return this.model
             .find()
+            .lean()
             .populate([
                 { path: 'image' },
                 { path: 'followers', select: 'name _id' },
+                { path: 'books' },
             ]);
     }
 
@@ -72,6 +80,18 @@ export class PublisherService {
             { $set: { image: attachImageToPublisher.image } },
         );
         return this.findOne(_id);
+    }
+
+    public attachBookToPublisher(_id: string, bookId: string) {
+        return this.model.updateOne({ _id }, { $push: { books: bookId } });
+    }
+
+    public async detachBookFromPublisher(publisherId: string, bookId: string) {
+        await this.model.updateOne(
+            { _id: publisherId },
+            { $pull: { books: bookId } },
+        );
+        return this.findOne(bookId);
     }
 
     public async remove(_id: string, unfollowDto: FollowPublisherDto) {

@@ -7,16 +7,21 @@ import { Book, BookDocument } from './book.schema';
 import { CategoryService } from 'category/category.service';
 import { CommentService } from 'comment/comment.service';
 import { UserService } from 'user/user.service';
+import { PublisherService } from 'publisher/publisher.service';
 
 @Injectable()
 export class BookService {
     constructor(
         @InjectModel(Book.name) private model: Model<BookDocument>,
         @Inject(CategoryService) private categoryService: CategoryService,
+
         @Inject(forwardRef(() => UserService))
         private userService: UserService,
+
         @Inject(forwardRef(() => CommentService))
         private commentService: CommentService,
+
+        @Inject(PublisherService) private publisherService: PublisherService,
     ) {}
 
     get populationOptions() {
@@ -43,10 +48,15 @@ export class BookService {
         ];
     }
 
-    async create(createBookDto: CreateBookDto) {
+    async create(createBookDto: CreateBookDto & { submittedBy: string }) {
         const book = await this.model.create(createBookDto);
         /* @ts-ignore */
         await this.categoryService.appendBook(createBookDto.category, book._id);
+
+        await this.publisherService.attachBookToPublisher(
+            book.publisher,
+            book._id,
+        );
         await this.userService.attachBookToAuthor(
             createBookDto.author,
             book._id,
@@ -106,6 +116,11 @@ export class BookService {
         const book = await this.findOne(_id);
         await this.categoryService.detachBook(book.category, book._id);
         await this.userService.detachBookFromAuthor(_id);
+        /* delete all books  */
+        await this.publisherService.detachBookFromPublisher(
+            book.publisher,
+            _id,
+        );
         const bookComments = book?.comments;
         if (bookComments?.length) {
             await this.commentService.removeMany(bookComments);

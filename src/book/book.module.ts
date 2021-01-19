@@ -7,6 +7,7 @@ import { IsCategoryIdValidConstraint } from 'validations/isCategoryIdValid';
 import { CategoryModule } from 'category/category.module';
 import { CommentModule } from 'comment/comment.module';
 import { UserModule } from 'user/user.module';
+import { PublisherModule } from 'publisher/publisher.module';
 
 @Module({
     imports: [
@@ -22,9 +23,10 @@ import { UserModule } from 'user/user.module';
                 },
             },
         ]),
-        CategoryModule,
+        forwardRef(() => CategoryModule),
         forwardRef(() => CommentModule),
         forwardRef(() => UserModule),
+        forwardRef(() => PublisherModule),
     ],
     controllers: [BookController],
     providers: [BookService, IsCategoryIdValidConstraint],
