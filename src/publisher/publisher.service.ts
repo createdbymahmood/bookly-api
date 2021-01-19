@@ -11,6 +11,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Publisher, PublisherDocument } from './publisher.schema';
 import { UserService } from 'user/user.service';
 import { BookService } from 'book/book.service';
+import { map } from 'lodash/fp';
 
 @Injectable()
 export class PublisherService {
@@ -27,7 +28,7 @@ export class PublisherService {
         return this.model.create(createPublisherDto);
     }
 
-    findAll() {
+    async findAll() {
         return this.model
             .find()
             .lean()
@@ -39,7 +40,10 @@ export class PublisherService {
     }
 
     findOne(_id: string) {
-        return this.model.findOne({ _id }).populate('image followers');
+        return this.model
+            .findOne({ _id })
+            .lean()
+            .populate('image followers books');
     }
 
     async update(_id: string, updatePublisherDto: UpdatePublisherDto) {
@@ -95,11 +99,16 @@ export class PublisherService {
     }
 
     public async remove(_id: string, unfollowDto: FollowPublisherDto) {
+        const publisher = await this.findOne(_id);
         /* FIXME this part is not working, checkout why ? 
         more details: when we delete a publisher, the publisherId must be deAttached 
         from the users following object
         */
         await this.userService.detachPublisher(unfollowDto.userId, _id);
+        map(
+            async (publisherId: string) =>
+                await this.bookService.remove(publisherId),
+        )(publisher.books);
         return this.model.deleteOne({ _id });
     }
 }

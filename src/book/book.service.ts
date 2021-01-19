@@ -32,7 +32,7 @@ export class BookService {
             },
             {
                 path: 'comments',
-                select: 'body author',
+                select: 'body author isPublished',
             },
             {
                 path: 'submittedBy',
@@ -44,6 +44,9 @@ export class BookService {
             },
             {
                 path: 'image',
+            },
+            {
+                path: 'publisher',
             },
         ];
     }

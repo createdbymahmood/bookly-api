@@ -17,7 +17,13 @@ import { PublisherModule } from 'publisher/publisher.module';
                 useFactory: () => {
                     const schema = BookSchema;
                     schema.pre('find', function () {
-                        this.lean().populate('submittedBy', 'name _id');
+                        this.lean().populate([
+                            'submittedBy',
+                            'publisher',
+                            'author',
+                            'category',
+                            'image',
+                        ]);
                     });
                     return schema;
                 },

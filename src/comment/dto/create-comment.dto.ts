@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsMongoId } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 import { IsBookIdValid } from '../../validations/IsBookIdValid';
 import { IsUserIdValid } from 'validations/isUserIdValid';
 

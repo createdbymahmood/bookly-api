@@ -24,10 +24,13 @@ export class CommentService {
     }
 
     async create(createCommentDto: CreateCommentDto) {
-        const comment = await this.model.create(createCommentDto);
+        const comment = await new this.model({
+            ...createCommentDto,
+            isPublished: false,
+        });
         await this.bookService.appendComment(comment.book, comment._id);
         await this.userService.appendComment(comment.author, comment._id);
-        return comment;
+        return comment.save();
     }
 
     findAll() {
