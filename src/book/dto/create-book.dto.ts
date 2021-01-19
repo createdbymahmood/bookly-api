@@ -1,4 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
+import { IsAuthorIdValid } from 'validations/isAuthorIdValid';
 import { IsCategoryIdValid } from 'validations/isCategoryIdValid';
 import { IsUserIdValid } from 'validations/isUserIdValid';
 
@@ -12,6 +13,6 @@ export class CreateBookDto {
     @IsUserIdValid({ message: 'Submitted by who?' })
     submittedBy: string;
 
-    @IsUserIdValid()
+    @IsAuthorIdValid()
     author: string;
 }
