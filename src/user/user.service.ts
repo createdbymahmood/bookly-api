@@ -35,14 +35,19 @@ export class UserService {
     }
 
     findAll() {
-        return this.model.find().lean().populate(this.populationOptions);
+        return this.model
+            .find()
+            .lean()
+            .populate(this.populationOptions)
+            .select('-password');
     }
 
     findOne(_id: string) {
         return this.model
             .findOne({ _id })
             .lean()
-            .populate(this.populationOptions);
+            .populate(this.populationOptions)
+            .select('-password');
     }
 
     findOneByName(name: string) {

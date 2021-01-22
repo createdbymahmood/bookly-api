@@ -16,6 +16,12 @@ export class User {
     @Prop()
     name: string;
 
+    @Prop()
+    username: string;
+
+    @Prop()
+    password: string;
+
     @Prop({ enum: ['ADMIN', 'AUTHOR', 'USER'], default: 'USER' })
     role: string;
 

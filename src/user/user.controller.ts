@@ -46,19 +46,19 @@ export class UserController {
     @Public()
     @Get()
     findAll() {
-        return this.userService.findAll().populate('image');
+        return this.userService.findAll();
     }
 
     @Public()
     @Get('/authors')
     findAuthors() {
-        return this.userService.findAuthors().populate('image');
+        return this.userService.findAuthors();
     }
 
     @Public()
     @Get(':id')
     findOne(@Param() params: FindUserParams) {
-        return this.userService.findOne(params.id).populate('image');
+        return this.userService.findOne(params.id);
     }
 
     @Put(':id')
