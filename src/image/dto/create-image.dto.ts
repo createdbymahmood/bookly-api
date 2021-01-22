@@ -1,3 +1,5 @@
+import * as Mongoose from 'mongoose';
+
 export class CreateImageDto {
     fieldname: string;
     /** Name of the file on the uploader's computer. */

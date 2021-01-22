@@ -5,24 +5,22 @@ import {
     Param,
     Delete,
     UseInterceptors,
-    UploadedFiles,
+    UploadedFile,
 } from '@nestjs/common';
 import { ImageService } from './image.service';
-import { AnyFilesInterceptor } from '@nestjs/platform-express';
+import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { Public } from 'auth/auth-public';
 import { FindImageParams } from './dto/image.params.dto';
+import * as Mongoose from 'mongoose';
 
 @Controller('image')
 export class ImageController {
     constructor(private readonly imageService: ImageService) {}
 
     @Post('upload')
-    @UseInterceptors(AnyFilesInterceptor())
-    public async uploadFile(@UploadedFiles() files: Express.Multer.File[]) {
-        files.map(async file => {
-            await this.imageService.create(file);
-        });
-        return files;
+    @UseInterceptors(FileInterceptor('image'))
+    public async uploadFile(@UploadedFile() file: Express.Multer.File) {
+        return this.imageService.create(file);
     }
 
     @Public()
