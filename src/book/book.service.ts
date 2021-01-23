@@ -65,6 +65,11 @@ export class BookService {
             book._id,
         );
 
+        await this.userService.attachBookToAuthor(
+            createBookDto.submittedBy,
+            book._id,
+        );
+
         await this.authorService.attachBookToAuthor(
             createBookDto.author,
             book._id,

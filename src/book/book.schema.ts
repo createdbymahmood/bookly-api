@@ -60,6 +60,9 @@ export class Book {
 
     @Prop({ type: String })
     description: string;
+
+    @Prop({ type: Number })
+    releaseYear: number;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);

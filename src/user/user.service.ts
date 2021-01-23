@@ -26,6 +26,8 @@ export class UserService {
         return [
             { path: 'comments', select: 'body book' },
             { path: 'following', select: 'title image' },
+            { path: 'books' },
+            { path: 'image' },
         ];
     }
 

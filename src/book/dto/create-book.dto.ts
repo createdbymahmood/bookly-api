@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 import { IsAuthorIdValid } from 'validations/isAuthorIdValid';
 import { IsCategoryIdValid } from 'validations/isCategoryIdValid';
 import { IsPublisherIdValid } from 'validations/isPublisherIdValid';
@@ -15,6 +15,9 @@ export class CreateBookDto {
 
     @IsAuthorIdValid()
     author: string;
+
+    @IsNumber()
+    releaseYear: number;
 
     @IsNotEmpty()
     @IsPublisherIdValid()
