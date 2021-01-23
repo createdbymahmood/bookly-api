@@ -20,10 +20,7 @@ export class CommentController {
     constructor(private readonly commentService: CommentService) {}
 
     @Post()
-    create(
-        @Body() createCommentDto: Omit<CreateCommentDto, 'author'>,
-        @Req() req,
-    ) {
+    create(@Body() createCommentDto: CreateCommentDto, @Req() req) {
         return this.commentService.create(
             Object.assign(createCommentDto, {
                 author: req.user.id,

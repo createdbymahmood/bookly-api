@@ -24,7 +24,7 @@ export class AuthorService {
             .find()
             .lean()
             .populate('books')
-            .select('title isPublished author');
+            .select('name isPublished author');
     }
 
     findOne(id: string) {
@@ -32,7 +32,7 @@ export class AuthorService {
             .findById(id)
             .lean()
             .populate('books')
-            .select('title isPublished author');
+            .select('name isPublished author');
     }
 
     update(_id: string, updateAuthorDto: UpdateAuthorDto) {
