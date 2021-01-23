@@ -26,7 +26,6 @@ export class UserService {
         return [
             { path: 'comments', select: 'body book' },
             { path: 'following', select: 'title image' },
-            { path: 'books', select: 'title _id' },
         ];
     }
 
@@ -131,15 +130,6 @@ export class UserService {
         );
     }
 
-    public async detachBookFromAuthor(bookId: string) {
-        const users = await this.findAll();
-        await this.model.updateMany(
-            { _id: { $in: users.map(user => user._id) } },
-            { $pull: { books: bookId } },
-            { multi: true },
-        );
-    }
-
     async remove(_id: string) {
         /* FIXME detach userID from publisher followers */
         const user = await this.findOne(_id);
@@ -147,10 +137,6 @@ export class UserService {
         /* remove all comments related to this user */
         await this.commentService.removeMany(user.comments);
 
-        /* remove all books related to this user */
-        map(async (bookId: string) => await this.bookService.remove(bookId))(
-            user.books,
-        );
         await this.model.deleteOne({ _id });
         return user;
     }

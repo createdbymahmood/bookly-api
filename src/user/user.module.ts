@@ -17,11 +17,7 @@ import { BookModule } from 'book/book.module';
         forwardRef(() => BookModule),
     ],
     controllers: [UserController],
-    providers: [
-        UserService,
-        IsUserIdValidConstraint,
-        IsAuthorIdValidConstraint,
-    ],
+    providers: [UserService, IsUserIdValidConstraint],
     exports: [UserService],
 })
 export class UserModule {}

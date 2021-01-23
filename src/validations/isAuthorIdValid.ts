@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { AuthorService } from 'author/author.service';
 import {
     registerDecorator,
     ValidationOptions,
@@ -7,19 +8,20 @@ import {
     ValidationArguments,
     isMongoId,
 } from 'class-validator';
-import { UserService } from '../user/user.service';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
 export class IsAuthorIdValidConstraint implements ValidatorConstraintInterface {
-    constructor(private userService: UserService) {}
+    constructor(private authorService: AuthorService) {}
     async validate(id: string, args: ValidationArguments) {
         if (!isMongoId(id)) {
             return false;
         }
-        return this.userService.findOne(id).then(user => {
-            /* FIXME why this shit not working ? */
-            return user.role === 'AUTHOR';
+        return this.authorService.findOne(id).then(author => {
+            if (author) {
+                return true;
+            }
+            return false;
         });
     }
 }

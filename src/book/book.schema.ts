@@ -46,7 +46,7 @@ export class Book {
 
     @Prop({
         type: Mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Author',
         required: false,
     })
     author: string;

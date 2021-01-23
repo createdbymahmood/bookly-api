@@ -8,6 +8,7 @@ import { CategoryModule } from 'category/category.module';
 import { CommentModule } from 'comment/comment.module';
 import { UserModule } from 'user/user.module';
 import { PublisherModule } from 'publisher/publisher.module';
+import { AuthorModule } from 'author/author.module';
 
 @Module({
     imports: [
@@ -33,6 +34,7 @@ import { PublisherModule } from 'publisher/publisher.module';
         forwardRef(() => CommentModule),
         forwardRef(() => UserModule),
         forwardRef(() => PublisherModule),
+        forwardRef(() => AuthorModule),
     ],
     controllers: [BookController],
     providers: [BookService, IsCategoryIdValidConstraint],

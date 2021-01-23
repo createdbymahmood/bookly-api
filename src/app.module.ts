@@ -20,6 +20,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from 'auth/jwt-auth.guard';
 /* helpers */
 import { join } from 'path';
+import { AuthorModule } from './author/author.module';
 
 @Module({
     controllers: [AppController],
@@ -44,6 +45,7 @@ import { join } from 'path';
             renderPath: 'image',
         }),
         ConfigModule.forRoot(),
+        AuthorModule,
     ],
 })
 export class AppModule {}

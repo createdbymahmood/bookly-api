@@ -8,6 +8,7 @@ import { CategoryService } from 'category/category.service';
 import { CommentService } from 'comment/comment.service';
 import { UserService } from 'user/user.service';
 import { PublisherService } from 'publisher/publisher.service';
+import { AuthorService } from 'author/author.service';
 
 @Injectable()
 export class BookService {
@@ -20,6 +21,9 @@ export class BookService {
 
         @Inject(forwardRef(() => CommentService))
         private commentService: CommentService,
+
+        @Inject(forwardRef(() => AuthorService))
+        private authorService: AuthorService,
 
         @Inject(PublisherService) private publisherService: PublisherService,
     ) {}
@@ -60,10 +64,12 @@ export class BookService {
             book.publisher,
             book._id,
         );
-        await this.userService.attachBookToAuthor(
+
+        await this.authorService.attachBookToAuthor(
             createBookDto.author,
             book._id,
         );
+
         return book;
     }
 
@@ -118,7 +124,7 @@ export class BookService {
     async remove(_id: string) {
         const book = await this.findOne(_id);
         await this.categoryService.detachBook(book.category, book._id);
-        await this.userService.detachBookFromAuthor(_id);
+        await this.authorService.detachBookFromAuthor(_id);
         /* delete all books  */
         await this.publisherService.detachBookFromPublisher(
             book.publisher,
@@ -129,5 +135,13 @@ export class BookService {
             await this.commentService.removeMany(bookComments);
         }
         return this.model.deleteOne({ _id });
+    }
+
+    removeMany(bookIds: string[]) {
+        return this.model.deleteMany({
+            _id: {
+                $in: bookIds,
+            },
+        });
     }
 }
