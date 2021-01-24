@@ -22,7 +22,7 @@ import { BookModule } from 'book/book.module';
                     schema.pre('find', function () {
                         this.lean()
                             .populate('author', 'name _id role')
-                            .select('updatedAt createdAt');
+                            .select('updatedAt createdAt body isPublished');
                     });
                     return schema;
                 },
