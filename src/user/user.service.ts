@@ -10,7 +10,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.schema';
 import { CommentService } from 'comment/comment.service';
 import { BookService } from 'book/book.service';
-import { map } from 'lodash/fp';
+import * as bcrypt from 'bcrypt';
+import { merge, omit } from 'lodash/fp';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
@@ -18,6 +20,9 @@ export class UserService {
         @InjectModel(User.name) private model: Model<UserDocument>,
         @Inject(forwardRef(() => CommentService))
         private commentService: CommentService,
+
+        private jwtService: JwtService,
+
         @Inject(forwardRef(() => BookService))
         private bookService: BookService,
     ) {}
@@ -31,8 +36,29 @@ export class UserService {
         ];
     }
 
-    create(createUserDto: CreateUserDto) {
-        return this.model.create(createUserDto);
+    public async create(createUserDto: CreateUserDto) {
+        const password = await bcrypt.hash(createUserDto.password, 10);
+        const user = await this.model.create(
+            merge({ password })(omit('password')(createUserDto)),
+        );
+
+        /* ّFIXME use the authService Module */
+        const payload = {
+            email: user.email,
+            password: user.password,
+            sub: user._id,
+        };
+
+        return {
+            userId: user._id,
+            role: user.role,
+            token: this.jwtService.sign(payload),
+        };
+    }
+
+    public async checkEmail(email: string) {
+        const user = await this.model.findOne({ email });
+        return Boolean(user);
     }
 
     findAll() {
@@ -51,9 +77,9 @@ export class UserService {
             .select('-password');
     }
 
-    findOneByName(name: string) {
+    findOneByEmail(email: string) {
         return this.model
-            .findOne({ name })
+            .findOne({ email })
             .lean()
             .populate(this.populationOptions);
     }

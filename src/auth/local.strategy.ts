@@ -14,7 +14,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
     async validate(
         request: Request,
-        username: string,
+        email: string,
         password: string,
     ): Promise<any> {
         const contextId = ContextIdFactory.getByRequest(request);
@@ -23,7 +23,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
             AuthService,
             contextId,
         );
-        const user = await authService.validateUser(username, password);
+        const user = await authService.validateUser(email, password);
 
         if (!user) {
             throw new UnauthorizedException();

@@ -12,7 +12,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ChangeRoleDto, UpdateUserDto } from './dto/update-user.dto';
-import { FindUserParams } from './dto/user.params.dto';
+import { FindUserParams, CheckEmailDto } from './dto/user.params.dto';
 import { Public } from 'auth/auth-public';
 import { JwtAuthGuard } from 'auth/jwt-auth.guard';
 import { LocalAuthGuard } from 'auth/local-auth.guard';
@@ -29,6 +29,12 @@ export class UserController {
     @Post()
     create(@Body() createUserDto: CreateUserDto) {
         return this.userService.create(createUserDto);
+    }
+
+    @Public()
+    @Post('check-email')
+    checkEmail(@Body() checkEmailDto: CheckEmailDto) {
+        return this.userService.checkEmail(checkEmailDto.email);
     }
 
     @UseGuards(LocalAuthGuard)
