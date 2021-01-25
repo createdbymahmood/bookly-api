@@ -46,7 +46,12 @@ export class UserController {
 
     @Get('profile')
     profile(@Request() req) {
-        return req.user;
+        return this.userService.findOne(req.user.id);
+    }
+
+    @Put('profile')
+    updateProfile(@Request() req, @Body() body: UpdateUserDto) {
+        return this.userService.update(req.user.id, body);
     }
 
     @Public()

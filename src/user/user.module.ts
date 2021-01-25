@@ -13,7 +13,18 @@ import { jwtConstants } from 'auth/constants';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+        MongooseModule.forFeatureAsync([
+            {
+                name: User.name,
+                useFactory: () => {
+                    const schema = UserSchema;
+                    schema.pre('find', function () {
+                        this.lean().populate('image');
+                    });
+                    return schema;
+                },
+            },
+        ]),
         JwtModule.register({
             secret: jwtConstants.secret,
             signOptions: { expiresIn: '1y' },

@@ -16,6 +16,9 @@ export class User {
     @Prop()
     name: string;
 
+    @Prop()
+    biography: string;
+
     @Prop({ unique: true })
     email: string;
 
@@ -33,12 +36,10 @@ export class User {
     ])
     comments: string[];
 
-    @Prop([
-        {
-            type: Mongoose.Schema.Types.ObjectId,
-            ref: 'Image',
-        },
-    ])
+    @Prop({
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: 'Image',
+    })
     image: string;
 
     @Prop([
