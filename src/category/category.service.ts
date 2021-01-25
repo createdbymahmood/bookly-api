@@ -26,7 +26,7 @@ export class CategoryService {
             .find()
             .select(['_id', 'title'])
             .lean()
-            .populate([{ path: 'books', select: 'title' }]);
+            .populate([{ path: 'books', select: 'title isPublished' }]);
     }
 
     findOne(_id: string) {
@@ -34,7 +34,7 @@ export class CategoryService {
             .findOne({ _id })
             .select(['_id', 'title'])
             .lean()
-            .populate([{ path: 'books', select: 'title' }]);
+            .populate([{ path: 'books', select: 'title isPublished' }]);
     }
 
     async update(_id: string, updateCategoryDto: UpdateCategoryDto) {
